@@ -9,9 +9,15 @@ def reset_ground_to(ground_type):
     walk_and_do(set_ground)
 
 def clear_unwanted(desired_entity, desired_ground):
-    def foo(x, y):
+    def harvest_andor_till():
         if get_entity_type() != desired_entity:
             harvest()
         if get_ground_type() != desired_ground:
             till()
-    walk_and_do(foo)
+    walk_and_do(harvest_andor_till)
+
+def ensure(desired_entity, desired_ground):
+    if get_entity_type() != desired_entity:
+        harvest()
+    if get_ground_type() != desired_ground:
+        till()

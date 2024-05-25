@@ -1,4 +1,4 @@
-from conversions__idx_xy import conv_xy
+from move_util import conv_xy
 
 # def do_at_each(x, y)
 def walk_and_do_with_xy(do_at_each):

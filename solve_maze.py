@@ -12,37 +12,30 @@ def random_solve():
     harvest()
 
 def left_wall_solve():
-    # counterclockwise order
-    # left  is idx+1 % 4
-    # right is idx-1 % 4
-    DIRECTIONS = [North, West, South, East]
+    rot_left = {North:West, West:South, South:East, East:North}
+    rot_right = {North:East, East:South, South:West, West:North}
+    rot_back = {North:South, South:North, West:East, East:West}
 
-    # follow the left wall
-    facing_idx = 0
+    facing = North
 
     while get_entity_type() != Entities.Treasure:
-        left_idx =  (facing_idx + 1) % 4
-        right_idx = (facing_idx - 1) % 4
+        left = rot_left[facing]
+        right = rot_right[facing]
 
-        # try moving left
-        if move(DIRECTIONS[left_idx]):
-            facing_idx = left_idx
+        if move(left):
+            facing = left
             
-        # can't move left, so try straight
-        elif move(DIRECTIONS[facing_idx]):
-            # facing_idx = facing_idx
-            pass
+        elif move(facing):
+            facing = facing
 
-        # can't move straight, try right
-        elif move(DIRECTIONS[right_idx]):
-            facing_idx = right_idx
+        elif move(right):
+            facing = right
 
-        # turn around
         else:
-            back_idx = (facing_idx + 2) % 4
-            if not move(DIRECTIONS[back_idx]):
+            back = rot_back[facing]
+            if not move(back):
                 print("HELP I AM STUCK")
-            facing_idx = back_idx
+            facing = back
 
     #do_a_flip()
     harvest()
