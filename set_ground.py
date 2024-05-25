@@ -10,6 +10,7 @@ def reset_ground_to(ground_type):
 
 def clear_unwanted(desired_entity, desired_ground):
     def harvest_andor_till():
+        quick_print(desired_entity, desired_ground)
         if get_entity_type() != desired_entity:
             harvest()
         if get_ground_type() != desired_ground:

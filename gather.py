@@ -5,12 +5,14 @@ from crops import carrots, grass, pumpkins, wood
 from move_util import goto
 from set_ground import clear_unwanted
 from solve_maze import left_wall_solve
+from sunflowers import sunflowers
 
-HAY = 5000
-WOOD = 5000
-CARROT = 5000
-PUMPKIN = 5000
-GOLD = 5000
+HAY = 10000
+WOOD = 10000
+CARROT = 10000
+PUMPKIN = 10000
+GOLD = 10000
+POWER = 5000
 
 goto(0)
 while True:
@@ -45,3 +47,8 @@ while True:
         clear_unwanted(Entities.Bush, Grounds.Turf)
     while num_items(Items.Wood) < WOOD:
         wood()
+
+    if num_items(Items.Power) < POWER:
+        clear_unwanted(Entities.Sunflower, Grounds.Soil)
+    while num_items(Items.Power) < POWER:
+        sunflowers()

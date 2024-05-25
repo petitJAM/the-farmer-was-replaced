@@ -1,6 +1,6 @@
-from move_util import conv_xy, goto, world_range
 from ensure_items import ensure_item
-from set_ground import clear_unwanted, ensure
+from move_util import conv_xy, goto, world_range
+from set_ground import ensure
 
 def sunflowers():
     petal_coords = dict()
