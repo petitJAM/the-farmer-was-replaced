@@ -91,7 +91,6 @@ def gold():
     graph, treasure_pos = walk_maze()
 
     for i in range(299):
-        quick_print("Treasure iteration", i+1)
         pos = get_pos_idx()
         path = bfs(graph, pos, treasure_pos)
         travel_path(path)

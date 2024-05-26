@@ -1,3 +1,1 @@
-d = {1: 'hey', 2: 'world', 69: 'foobar'}
-
-print(max(d))
+print(get_cost(Items.Cactus_Seed))

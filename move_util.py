@@ -33,6 +33,9 @@ def goto(idx):
     while get_pos_y() != desty:
         move(diry)
 
+def goto_xy(x, y):
+    goto(conv_idx(x, y))
+
 def conv_xy(idx):
     y = idx  % get_world_size()
     x = idx // get_world_size()

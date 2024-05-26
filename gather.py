@@ -47,12 +47,15 @@ def pumpkin():
     queue = list(world_range())
 
     while len(queue) > 0:
+        quick_print(queue)
         next = queue.pop(0)
         goto(next)
         if get_entity_type() != Entities.Pumpkin:
             if not plant(Entities.Pumpkin):
                 return False
             water()
+            queue.append(next)
+        elif not can_harvest():
             queue.append(next)
 
     while not can_harvest():
@@ -109,6 +112,53 @@ ground = "ground"
 required_amt = "required_amt"
 require_inc = "require_inc"
 
+world_size = get_world_size()**2
+
+ALL_ITEMS = [
+    Items.Carrot,
+    Items.Carrot_Seed,
+    Items.Empty_Tank,
+    Items.Fertilizer,
+    Items.Gold,
+    Items.Hay,
+    Items.Power,
+    Items.Pumpkin,
+    Items.Pumpkin_Seed,
+    Items.Sunflower_Seed,
+    Items.Water_Tank,
+    Items.Wood,
+    Items.Cactus,
+    Items.Cactus_Seed,
+    Items.Egg,
+    Items.Bones,
+]
+
+# This min code might only exist because I didn't disable 
+#  debug_item and though it wasn't working.
+mins = {
+    Items.Hay: 1,
+    Items.Wood: 1,
+    Items.Carrot: 1,
+    Items.Pumpkin: 1,
+    Items.Gold: 1,
+    Items.Power: 1,
+}
+for item in ALL_ITEMS:
+    costs = get_cost(item)
+    if costs != None:
+        for c in costs:
+            if c not in mins:
+                mins[c] = 0
+            mins[c] += costs[c]
+
+quick_print(mins)
+hay_min = mins[Items.Hay] * world_size * 2
+wood_min = mins[Items.Wood] * world_size * 2
+carrot_min = mins[Items.Carrot] * world_size * 2
+pumpkin_min = mins[Items.Pumpkin] * world_size * 2
+gold_min = mins[Items.Gold] * world_size * 2
+power_min = mins[Items.Power] * world_size * 2
+
 controller = {
     items: [
         Items.Hay,
@@ -123,53 +173,70 @@ controller = {
         func: hay,
         seed: None,
         ground: Grounds.Turf,
-        required_amt: 1000,
+        required_amt: hay_min,
         require_inc: 1000,
     },
     Items.Wood: {
         func: wood,
         seed: None,
         ground: Grounds.Turf,
-        required_amt: 1000,
+        required_amt: wood_min,
         require_inc: 1000,
     },
     Items.Carrot: {
         func: carrot,
         seed: Items.Carrot_Seed,
         ground: Grounds.Soil,
-        required_amt: 1000,
+        required_amt: carrot_min,
         require_inc: 1000,
     },
     Items.Pumpkin: {
         func: pumpkin,
         seed: Items.Pumpkin_Seed,
         ground: Grounds.Soil,
-        required_amt: 1000,
+        required_amt: pumpkin_min,
         require_inc: 1000,
     },
     Items.Gold: {
         func: gold,
         seed: None,
         ground: Grounds.Turf,
-        required_amt: 1000,
+        required_amt: gold_min,
         require_inc: 1000,
     },
     Items.Power: {
         func: power,
         seed: Items.Sunflower_Seed,
         ground: Grounds.Soil,
-        required_amt: 500,
+        required_amt: power_min,
         require_inc: 50,
     },
 }
 
 
 debug_item = None
-# debug_item = Items.Power
+# debug_item = Items.Pumpkin
 
+goto(0)
 
 while True:
     world_size = get_world_size()**2
+
+    reqs = list()
+    reqs.append("h")
+    reqs.append(controller[Items.Hay][required_amt])
+    reqs.append("w")
+    reqs.append(controller[Items.Wood][required_amt])
+    reqs.append("c")
+    reqs.append(controller[Items.Carrot][required_amt])
+    reqs.append("p")
+    reqs.append(controller[Items.Pumpkin][required_amt])
+    reqs.append("g")
+    reqs.append(controller[Items.Gold][required_amt])
+    reqs.append("s")
+    reqs.append(controller[Items.Power][required_amt])
+    quick_print(reqs)
+
 
     for item in controller[items]:
         if debug_item != None and debug_item != item:
@@ -179,11 +246,11 @@ while True:
         required_seed = control[seed]
         ground_check_required = True
 
-        quick_print("Processing", item, "with", control)
-
         while num_items(item) < control[required_amt]:
-            if required_seed != None and not trade(required_seed, world_size):
-                break
+            if required_seed != None and num_items(required_seed) < world_size*2:
+                if not trade(required_seed, world_size*2):
+                    quick_print("Can't trade for", required_seed)
+                    break
 
             if ground_check_required:
                 reset_ground_to(control[ground])
@@ -191,5 +258,6 @@ while True:
             goto(0)
             control[func]()
 
-        control[required_amt] += control[require_inc]
-
+        # This occurs when we can't get enough seeds
+        if num_items(item) >= control[required_amt]:
+            control[required_amt] += control[require_inc]
