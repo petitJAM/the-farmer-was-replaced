@@ -9,6 +9,10 @@ rot_back = {North:South, South:North, West:East, East:West}
 
 # The initial walk of the maze to build a graph
 def walk_maze():
+    rot_left = {North:West, West:South, South:East, East:North}
+    rot_right = {North:East, East:South, South:West, West:North}
+    rot_back = {North:South, South:North, West:East, East:West}
+
     visited = dict()
     world_size = get_world_size()**2
 
@@ -46,6 +50,9 @@ def walk_maze():
     return visited, treasure_pos
 
 def check_neighbors():
+    directions = {North,South,East,West}
+    rot_back = {North:South, South:North, West:East, East:West}
+
     neighbors = list()
     for d in directions:
         if move(d):

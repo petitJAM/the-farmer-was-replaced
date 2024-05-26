@@ -1,3 +1,3 @@
-foo = Items.Carrot
+d = {1: 'hey', 2: 'world', 69: 'foobar'}
 
-quick_print(foo == Items)
+print(max(d))
