@@ -7,48 +7,64 @@ from set_ground import clear_unwanted
 from solve_maze import left_wall_solve
 from sunflowers import sunflowers
 
-HAY = 10000
-WOOD = 10000
-CARROT = 10000
-PUMPKIN = 10000
-GOLD = 10000
-POWER = 5000
+reqs = {
+    Items.Hay: 1000,
+    Items.Wood: 1000,
+    Items.Carrot: 1000,
+    Items.Pumpkin: 1000,
+    Items.Gold: 1000,
+    Items.Power: 1000,
+}
 
 goto(0)
 while True:
-    while num_items(Items.Gold) < GOLD:
-        if num_items(Items.Pumpkin) < 500:
-            # need pumpkins for fertilizer
-            break
+    quick_print(reqs)
 
-        plant_maze()
-        left_wall_solve()
-
-    if num_items(Items.Pumpkin) < PUMPKIN:
-        clear_unwanted(Entities.Pumpkin, Grounds.Soil)
-    while num_items(Items.Pumpkin) < PUMPKIN:
-        if num_items(Items.Carrot) < 10:
-            break
-        pumpkins()
-
-    if num_items(Items.Carrot) < CARROT:
-        clear_unwanted(Entities.Carrots, Grounds.Soil)
-    while num_items(Items.Carrot) < CARROT:
-        if num_items(Items.Hay) < 10 or num_items(Items.Wood) < 10:
-            break
-        carrots()
-
-    if num_items(Items.Hay) < HAY:
+    if num_items(Items.Hay) < reqs[Items.Hay]:
         clear_unwanted(Entities.Grass, Grounds.Turf)
-    while num_items(Items.Hay) < HAY:
-        grass()
+        while num_items(Items.Hay) < reqs[Items.Hay]:
+            grass()
+    else:
+        reqs[Items.Hay] += 1000
 
-    if num_items(Items.Wood) < WOOD:
+    if num_items(Items.Wood) < reqs[Items.Wood]:
         clear_unwanted(Entities.Bush, Grounds.Turf)
-    while num_items(Items.Wood) < WOOD:
-        wood()
+        while num_items(Items.Wood) < reqs[Items.Wood]:
+            wood()
+    else:
+        reqs[Items.Wood] += 1000
 
-    if num_items(Items.Power) < POWER:
+    if num_items(Items.Carrot) < reqs[Items.Carrot]:
+        clear_unwanted(Entities.Carrots, Grounds.Soil)
+        while num_items(Items.Carrot) < reqs[Items.Carrot]:
+            if num_items(Items.Hay) < 10 or num_items(Items.Wood) < 10:
+                break
+            carrots()
+    else:
+        reqs[Items.Carrot] += 1000
+
+    if num_items(Items.Pumpkin) < reqs[Items.Pumpkin]:
+        clear_unwanted(Entities.Pumpkin, Grounds.Soil)
+        while num_items(Items.Pumpkin) < reqs[Items.Pumpkin]:
+            if num_items(Items.Carrot) < 10:
+                break
+            pumpkins()
+    else:
+        reqs[Items.Pumpkin] += 1000
+
+    if num_items(Items.Gold) < reqs[Items.Gold]:
+        while num_items(Items.Gold) < reqs[Items.Gold]:
+            if num_items(Items.Pumpkin) < 500:
+                # need pumpkins for fertilizer
+                break
+            plant_maze()
+            left_wall_solve()
+    else:
+        reqs[Items.Gold] += 1000
+
+    if num_items(Items.Power) < reqs[Items.Power]:
         clear_unwanted(Entities.Sunflower, Grounds.Soil)
-    while num_items(Items.Power) < POWER:
-        sunflowers()
+        while num_items(Items.Power) < reqs[Items.Power]:
+            sunflowers()
+    else:
+        reqs[Items.Power] += 1000

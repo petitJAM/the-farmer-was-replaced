@@ -10,6 +10,9 @@ def sunflowers():
         if x > 0 and y == 0:
             move(East)
 
+        if not ensure_item(Items.Sunflower_Seed):
+            return False
+
         ensure(Entities.Sunflower, Grounds.Soil)
         plant(Entities.Sunflower)
 
@@ -30,7 +33,7 @@ def sunflowers():
                 goto(i)
                 if can_harvest():
                     harvest()
-                else:
+                elif get_entity_type() == Entities.Sunflower:
                     petal_coords[p].append(i)
 
 

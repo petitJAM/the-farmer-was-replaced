@@ -1,6 +1,6 @@
-from goto import goto
+from move_util import goto
 from walk_and_do import walk_and_do
-from treat_land import fertilize
+from treat_land import fertilize_old
 
 def plant_maze():
     if get_entity_type() == Entities.Hedge:
@@ -18,7 +18,7 @@ def plant_maze():
     goto(0)
 
     while get_entity_type() != Entities.Hedge:
-        fertilize()
+        fertilize_old()
 
 clear()
 plant_maze()

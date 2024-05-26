@@ -1,7 +1,3 @@
-d = dict()
+foo = Items.Carrot
 
-quick_print(5 in d)
-
-d[5] = 1
-
-quick_print(5 in d)
+quick_print(foo == Items)

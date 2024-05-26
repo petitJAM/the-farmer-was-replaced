@@ -1,19 +1,18 @@
 from build_maze import plant_maze
-from move_util import conv_idx
+from move_util import conv_idx, get_pos_idx, travel_path
+from treat_land import fertilize_old
 
 directions = {North,South,East,West}
 rot_left = {North:West, West:South, South:East, East:North}
 rot_right = {North:East, East:South, South:West, West:North}
 rot_back = {North:South, South:North, West:East, East:West}
 
+# The initial walk of the maze to build a graph
 def walk_maze():
-    # list? or dictionary?
-    # list of tuples maybe
     visited = dict()
     world_size = get_world_size()**2
 
     treasure_pos = None
-    next_treasure_pos = None
 
     facing = North
     while len(visited) < world_size:
@@ -22,22 +21,16 @@ def walk_maze():
         measurement = measure()
         if measurement != None:
             treasure_pos = pos
-            next_treasure_pos = conv_idx(measurement[0], measurement[1]) # type: ignore[reportIndexIssue]
-            quick_print(measurement)
-            quick_print(next_treasure_pos)
 
-        neighbors = check_neighbors()
-
-        visited[pos] = {
-            "neighbors": neighbors,
-        }
+        if pos not in visited:
+            visited[pos] = {"neighbors": check_neighbors()}
 
         left = rot_left[facing]
         right = rot_right[facing]
 
         if move(left):
             facing = left
-            
+
         elif move(facing):
             facing = facing
 
@@ -50,21 +43,59 @@ def walk_maze():
                 print("HELP I AM STUCK")
             facing = back
 
-    quick_print("I visited:", visited)
-
-    return visited, treasure_pos, next_treasure_pos
-
+    return visited, treasure_pos
 
 def check_neighbors():
-    neighbors = dict()
+    neighbors = list()
     for d in directions:
         if move(d):
-            idx = conv_idx(get_pos_x(), get_pos_y())
-            neighbors[d] = idx
+            neighbors.append(get_pos_idx())
             move(rot_back[d])
     return neighbors
 
+def bfs(graph, start, end):
+    queue = list()
+    queue.append([start])
 
-if get_entity_type() != Entities.Hedge:
-    plant_maze()
-v, t, n = walk_maze()
+    visited = set()
+
+    while len(queue) > 0:
+        path = queue.pop(0)
+        node = path[-1]
+
+        if node == end:
+            return path
+
+        elif node not in visited:
+            for neighbor in graph[node]["neighbors"]:
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
+
+            visited.add(node)
+
+    quick_print("NO PATH FOUND")
+    return []
+
+def gold():
+    if get_entity_type() not in [Entities.Hedge, Entities.Treasure]:
+        plant_maze()
+
+    graph, treasure_pos = walk_maze()
+
+    for i in range(299):
+        quick_print("Treasure iteration", i+1)
+        pos = get_pos_idx()
+        path = bfs(graph, pos, treasure_pos)
+        travel_path(path)
+        x, y = measure() # type: ignore
+        next_treasure_pos = conv_idx(x, y)
+
+        while get_entity_type() == Entities.Treasure:
+            fertilize_old()
+
+        treasure_pos = next_treasure_pos
+
+    harvest()
+
+gold()

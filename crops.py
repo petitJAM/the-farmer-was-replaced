@@ -1,6 +1,6 @@
-from treat_land import water, fertilize
+from move_util import goto
+from treat_land import water_old, fertilize_old
 from walk_and_do import walk_and_do, walk_and_do_with_xy
-from goto import goto
 from ensure_items import ensure_item
 
 def carrots():
@@ -9,7 +9,7 @@ def carrots():
             trade(Items.Carrot_Seed, 5)
         if can_harvest():
             harvest()
-        water()
+        water_old()
         if get_entity_type() != Entities.Carrots:
             if get_ground_type() != Grounds.Soil:
                 till()
@@ -38,7 +38,7 @@ def wood():
         else:
             if get_entity_type() != Entities.Bush:
                 plant(Entities.Bush)
-        water()
+        water_old()
 
     walk_and_do_with_xy(do_wood)
 
@@ -54,11 +54,11 @@ def pumpkins():
                 return False
 
             plant(Entities.Pumpkin)
-            water()
+            water_old()
             queue.append(next)
 
         while get_entity_type() != None and not can_harvest():
-            fertilize()
+            fertilize_old()
 
     goto(0)
     while not can_harvest():

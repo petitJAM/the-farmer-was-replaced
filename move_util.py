@@ -41,4 +41,10 @@ def conv_xy(idx):
 def conv_idx(x, y):
     return x * get_world_size() + y
 
+def get_pos_idx():
+    return conv_idx(get_pos_x(), get_pos_y())
 
+# Traverse a list of indexes
+def travel_path(path):
+    for idx in path:
+        goto(idx)
