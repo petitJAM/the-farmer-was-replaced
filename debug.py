@@ -1,1 +1,1 @@
-print(get_cost(Items.Cactus_Seed))
+harvest()
