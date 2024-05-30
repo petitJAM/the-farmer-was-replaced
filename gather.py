@@ -1,11 +1,9 @@
 
 from better_maze import gold
-from crops import carrots, pumpkins
+from cactus import cacti_sort
 from fertilizing import fertilize
 from move_util import conv_xy, goto, world_range
 from set_ground import reset_ground_to
-from sunflowers import sunflowers
-from treat_land import fertilize_old
 from watering import water
 
 def hay():
@@ -104,6 +102,8 @@ def power():
             petal_coords[petals] = list()
         petal_coords[petals].append(i)
 
+def cactus():
+    cacti_sort()
 
 items = "items"
 func = "func"
@@ -142,6 +142,7 @@ mins = {
     Items.Pumpkin: 1,
     Items.Gold: 1,
     Items.Power: 1,
+    Items.Cactus: 1,
 }
 for item in ALL_ITEMS:
     costs = get_cost(item)
@@ -158,6 +159,7 @@ carrot_min = mins[Items.Carrot] * world_size * 2
 pumpkin_min = mins[Items.Pumpkin] * world_size * 2
 gold_min = mins[Items.Gold] * world_size * 2
 power_min = mins[Items.Power] * world_size * 2
+cacti_min = mins[Items.Cactus] * world_size * 2
 
 controller = {
     items: [
@@ -167,6 +169,7 @@ controller = {
         Items.Pumpkin,
         Items.Gold,
         Items.Power,
+        Items.Cactus,
     ],
 
     Items.Hay: {
@@ -211,6 +214,13 @@ controller = {
         required_amt: power_min,
         require_inc: 50,
     },
+    Items.Cactus: {
+        func: cactus,
+        seed: Items.Cactus_Seed,
+        ground: Grounds.Soil,
+        required_amt: cacti_min,
+        require_inc: 1000,
+    }
 }
 
 

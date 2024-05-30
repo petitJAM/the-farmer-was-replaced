@@ -68,7 +68,7 @@ def sort_cacti():
             n += 1
 
 
-def cactus():
+def cacti_sort():
     plant_cacti()
     sort_cacti()
     harvest()
