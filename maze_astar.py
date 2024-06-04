@@ -56,7 +56,7 @@ def heuristic(node, goal):
     return abs(node_x - goal_x) + abs(node_y - goal_y)
 
 
-def maze():
+def maze_astar():
     graph, treasure_pos = walk_maze()
 
     #set_execution_speed(5)
@@ -78,4 +78,4 @@ def maze():
 
 # set_farm_size(4)
 plant_maze()
-maze()
+maze_astar()
