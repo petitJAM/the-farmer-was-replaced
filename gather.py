@@ -1,7 +1,7 @@
 
-from better_maze import gold
 from cactus import cacti_sort
 from fertilizing import fertilize
+from maze_astar import maze_astar
 from move_util import conv_xy, goto, world_range
 from set_ground import reset_ground_to
 from watering import water
@@ -201,7 +201,7 @@ controller = {
         require_inc: 1000,
     },
     Items.Gold: {
-        func: gold,
+        func: maze_astar,
         seed: None,
         ground: Grounds.Turf,
         required_amt: gold_min,
