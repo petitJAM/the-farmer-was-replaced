@@ -1,1 +1,1 @@
-harvest()
+clear()
