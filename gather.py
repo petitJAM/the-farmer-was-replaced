@@ -45,7 +45,6 @@ def pumpkin():
     queue = list(world_range())
 
     while len(queue) > 0:
-        quick_print(queue)
         next = queue.pop(0)
         goto(next)
         if get_entity_type() != Entities.Pumpkin:
